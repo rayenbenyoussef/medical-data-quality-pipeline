@@ -1,152 +1,54 @@
 # 🏥 Medical Data Quality Pipeline
 
-A modular and scalable **medical data quality pipeline** built in Python to automate cleaning, validation, and profiling of real-world healthcare datasets. Designed to ensure data reliability and consistency for analytics, reporting, and machine learning tasks in the medical domain.
+A project idea to showcase my experience with medical datasets. This pipeline will demonstrate cleaning, validation, and profiling of real-world healthcare data when implemented.
 
 ---
 
 ## 🚀 Overview
 
-Healthcare datasets are often messy, incomplete, and inconsistent. This project provides a structured pipeline to process raw medical datasets and transform them into **high-quality, analysis-ready data**.
-
-The pipeline follows a standard ETL approach:
-
-- **Extract** → Load raw medical data  
-- **Transform** → Clean and validate data  
-- **Load** → Output processed datasets and reports  
+The goal of this project is to build a structured ETL-style pipeline to handle messy medical data, making it analysis-ready for future analytics or machine learning projects.
 
 ---
 
-## ⚙️ Features
+## ⚙️ Planned Features
 
-### Data Cleaning
-- Handle missing values  
-- Remove duplicates  
-- Standardize medical and numeric data formats  
-
-### Data Validation
-- Schema validation  
-- Rule-based checks (e.g., valid ranges, medical thresholds)  
-
-### Data Profiling
-- Summary statistics  
-- Distribution analysis  
-- Missing value analysis  
-
-### Outlier Detection
-- Statistical methods (IQR, Z-score)
-
-### Reporting
-- Automated generation of **data quality reports**  
-- Visualizations for better understanding  
+- Data cleaning: handle missing values, duplicates, and inconsistent formats.
+- Data validation: check medical thresholds and timestamp consistency.
+- Data profiling: generate summary statistics and visualizations.
+- Modular Python scripts for scalability.
 
 ---
 
-## 🏗️ Project Structure
+## 🏗️ Planned Project Structure
 
 ```
 medical-data-quality-pipeline/
-│
-├── data/
-│   ├── raw/         # Original datasets (unchanged)
-│   └── processed/   # Cleaned datasets
-│
-├── src/             # Core pipeline modules
+├── data/raw/         # Original medical datasets (e.g., MIMIC-IV-ED Demo)
+├── data/processed/   # Cleaned and validated datasets
+├── src/
 │   ├── cleaning.py
 │   ├── validation.py
 │   └── profiling.py
-│
-├── notebooks/       # Exploratory analysis
-│   └── demo_analysis.ipynb
-│
-├── spss_workflow/   # SPSS Modeler workflow & reports
-│   ├── workflow.str
-│   └── report.pdf
-│
-├── reports/         # Final generated reports
-│   └── combined_report.pdf
-│
-├── config/          # Configuration files
-│   └── validation_rules.json
-│
+├── notebooks/demo_analysis.ipynb
+├── reports/combined_report.pdf
+├── config/validation_rules.json
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 🎯 Objectives
+## 🔧 Skills to Demonstrate
 
-- Improve data quality for medical analytics  
-- Automate repetitive medical data preparation tasks  
-- Provide clear insights into **dataset health**  
-- Ensure datasets are ready for **analytics and ML in healthcare**  
-
----
-
-## 🔄 Workflow
-
-1. Load raw dataset (CSV, relational tables, or demo data)  
-2. Apply cleaning operations (missing values, duplicates, invalid entries)  
-3. Validate data using predefined rules (medical thresholds, timestamps, ranges)  
-4. Perform data profiling and analysis  
-5. Generate reports and export cleaned dataset  
-
----
-
-## 🧩 Recommended Dataset
-
-**MIMIC-IV-ED Demo** – Open-access subset of real hospital data:
-
-- 100 patient records  
-- Tables: `edstays`, `diagnosis`, `triage`, `vitalsign`, `medrecon`, `pyxis`  
-- Perfect for testing cleaning, validation, and profiling pipelines  
-
-> Start small with the demo and scale to full MIMIC-IV for a professional, CV-worthy project.
-
----
-
-## 🔧 Getting Started
-
-### 1. Download dataset
-
-**Manual download (Windows-friendly)**:  
-[Download ZIP (95.5 KB)](https://physionet.org/files/mimic-iv-ed-demo/2.2/)  
-Extract and move files into:
-
-```bash
-data/raw/
-```
-
-### 2. Explore the dataset
-
-```python
-import pandas as pd
-
-edstays = pd.read_csv("data/raw/edstays.csv")
-print(edstays.head())
-print(edstays.info())
-print(edstays.isnull().sum())
-```
-
-### 3. Apply pipeline
-
-- Clean missing values and duplicates  
-- Validate numeric and categorical columns  
-- Profile dataset and generate reports  
-
----
-
-## 🧩 Future Enhancements
-
-- Interactive dashboard (Streamlit)  
-- SQL/database integration  
-- API-based data ingestion  
-- Advanced anomaly detection (ML-based)  
+- Python, Pandas, NumPy
+- Data cleaning, validation, and profiling
+- Handling real-world hospital datasets
+- Designing a modular pipeline for scalability
 
 ---
 
 ## 📌 Status
 
-🚧 Project initialized — development in progress.  
+🚧 Project planned — implementation not started yet.
 
-> Tested on **MIMIC-IV-ED Demo** and designed to scale to full MIMIC-IV datasets.
+> This README serves as a blueprint for a professional medical data quality project, ready to be developed and added to a portfolio.
