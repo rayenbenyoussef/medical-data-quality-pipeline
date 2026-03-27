@@ -41,6 +41,12 @@
             },
             "pain": {
                 "allowed_values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            },
+            "acuity": {
+                "allowed_values": [1, 2, 3, 4]
+            },
+            "chiefcomplaint": {
+                "allowed_values": [1, 2, 3, 4, 5, 6, 7, 8, 9]
             }
         }
     }

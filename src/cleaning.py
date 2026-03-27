@@ -94,12 +94,8 @@ print("=========================================================================
 print(df_edstays.head())
 print("=========================================================================")
 
-'''
+
 df_triage = pd.read_csv(os.path.join(BASE_DIR,'data','raw','triage.csv'))
-df_vitalsign = pd.read_csv(os.path.join(BASE_DIR,'data','raw','vitalsign.csv'))
-df_diagnosis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','diagnosis.csv'))
-df_medrecon = pd.read_csv(os.path.join(BASE_DIR,'data','raw','medrecon.csv'))
-df_pyxis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','pyxis.csv'))
 
 df_triage['temperature']=(df_triage['temperature'] - 32) * 5/9
 df_triage['temperature']=df_triage['temperature'].apply(lambda x: x if 10 <= x <= 47 else None)
@@ -143,12 +139,63 @@ df_triage['pain']=df_triage['pain'].map({'0':0, '1':1, '2':2, '3':3, '4':4, '5':
 print(df_triage['pain'].unique())
 print("=========================================================================")
 
+print(df_triage['acuity'].unique())
+print("=========================================================================")
+
+df_triage['chiefcomplaint']=df_triage['chiefcomplaint'].replace('UNKNOWN-CC', None)
+df_chiefcomplaint=[
+    (1, 'Pain / Musculoskeletal'),
+    (2, 'Cardiac'),
+    (3, 'Respiratory'),
+    (4, 'Neurologic'),
+    (5, 'Infection'),
+    (6, 'Psychiatric'),
+    (7, 'Trauma'),
+    (8, 'Gastrointestinal'),
+    (9, 'Other')
+]
+df_chiefcomplaint=pd.DataFrame(df_chiefcomplaint, columns=['Code', 'Chief Complaint Category'])
+df_chiefcomplaint.to_csv(os.path.join(BASE_DIR,"data","processed","chiefcomplaint_mapping.csv"), index=False)
+
+def categorize_complaint(text):
+    if pd.isna(text):
+        return None
+    text = text.lower()
+    if any(x in text for x in ['pain', 'abd', 'back', 'leg', 'arm', 'hip', 'foot', 'neck']):
+        return 1
+    elif any(x in text for x in ['chest', 'palpitations', 'tachycardia', 'nstemi', 'hypertension']):
+        return 2
+    elif any(x in text for x in ['shortness of breath', 'dyspnea', 'respiratory', 'pe']):
+        return 3
+    elif any(x in text for x in ['stroke', 'cva', 'facial droop', 'weakness', 'altered mental status']):
+        return 4
+    elif any(x in text for x in ['fever', 'infection', 'sepsis', 'neutropenia']):
+        return 5
+    elif any(x in text for x in ['psych', 'psychiatric', 'depression', 'suicide', 'si']):
+        return 6
+    elif any(x in text for x in ['trauma', 'fall', 'head bleed', 'fracture', 'mvc']):
+        return 7
+    elif any(x in text for x in ['vomiting', 'nausea', 'diarrhea', 'abdominal distention']):
+        return 8
+    else:
+        return 9
+
+df_triage['chiefcomplaint'] = df_triage['chiefcomplaint'].apply(categorize_complaint)
+print(df_triage['chiefcomplaint'].unique())
+print("=========================================================================")
+
 print(df_triage.info())
 print("=========================================================================")
 
 print(df_triage.head())
 print("=========================================================================")
 
+'''
+
+df_vitalsign = pd.read_csv(os.path.join(BASE_DIR,'data','raw','vitalsign.csv'))
+df_diagnosis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','diagnosis.csv'))
+df_medrecon = pd.read_csv(os.path.join(BASE_DIR,'data','raw','medrecon.csv'))
+df_pyxis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','pyxis.csv'))
 
 
 
