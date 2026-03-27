@@ -104,7 +104,43 @@ df_pyxis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','pyxis.csv'))
 df_triage['temperature']=(df_triage['temperature'] - 32) * 5/9
 df_triage['temperature']=df_triage['temperature'].apply(lambda x: x if 10 <= x <= 47 else None)
 print(df_triage['temperature'].describe())
+print("=========================================================================")
 
+print(df_triage['heartrate'].describe())
+print("=========================================================================")
+
+print(df_triage['resprate'].describe())
+print("=========================================================================")
+
+print(df_triage['o2sat'].describe())
+print("=========================================================================")
+
+print(df_triage['sbp'].describe())
+print("=========================================================================")
+
+df_triage['dbp']=df_triage['dbp'].apply(lambda x: x if 30<=x<=200 else None)
+print(df_triage['dbp'].describe())
+print("=========================================================================")
+
+df_pain=[
+    (0, 'No Pain'),
+    (1, 'Mild Pain'),
+    (2, 'Mild Pain'),
+    (3, 'Moderate Pain'),
+    (4, 'Moderate Pain'),
+    (5, 'Moderate Pain'),
+    (6, 'Severe Pain'),
+    (7, 'Severe Pain'),
+    (8, 'Severe Pain'),
+    (9, 'Most Severe Pain'),
+    (10, 'Most Severe Pain')
+]
+
+df_pain=pd.DataFrame(df_pain, columns=['Code', 'Pain Level'])
+df_pain.to_csv(os.path.join(BASE_DIR,"data","processed","pain_mapping.csv"), index=False)
+df_triage['pain']=df_triage['pain'].map({'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10,
+                                         '13':10,'UA':None,'o':0,'unable':None,'uta':None,'Critical':8,'ett':None})
+print(df_triage['pain'].unique())
 print("=========================================================================")
 
 print(df_triage.info())
