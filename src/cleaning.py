@@ -190,12 +190,9 @@ print("=========================================================================
 print(df_triage.head())
 print("=========================================================================")
 
-'''
+
 
 df_vitalsign = pd.read_csv(os.path.join(BASE_DIR,'data','raw','vitalsign.csv'))
-df_diagnosis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','diagnosis.csv'))
-df_medrecon = pd.read_csv(os.path.join(BASE_DIR,'data','raw','medrecon.csv'))
-df_pyxis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','pyxis.csv'))
 
 timeRgEx=r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$'
 df_correcttime=df_vitalsign['charttime'].astype(str).str.match(timeRgEx)
@@ -243,6 +240,13 @@ df_vitalsign['rhythm']=df_vitalsign['rhythm'].map({'Sinus Tachycardia':1,
 print(df_vitalsign['rhythm'].unique())
 print("=========================================================================")
 
+
+df_vitalsign['pain']=df_vitalsign['pain'].map({'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10,
+                                         'UA':None,'ua':None,'unable':None,'uta':None,'Critical':8,'ett':None,
+                                         'asleep':None,'sleeping':None,'sleepin':None,'sitting ':None,'sleep ':None,'sleep':None,
+                                         'laying down':None,'standing ':None,'8.5':9,'u':None,'denies':None,'does not scale':None,
+                                         'Unable':None,'grimace with palpation':3,'sedated':None,'uncooperative':None,'NAD':0,
+                                         'UTA':None,'0/10':0,'intubated':None,'Asleep':None})
 print(df_vitalsign['pain'].unique())
 print("=========================================================================")
 
@@ -252,6 +256,63 @@ print("=========================================================================
 print(df_vitalsign.head())
 print("=========================================================================")
 
+'''
+
+df_diagnosis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','diagnosis.csv'))
+df_medrecon = pd.read_csv(os.path.join(BASE_DIR,'data','raw','medrecon.csv'))
+df_pyxis = pd.read_csv(os.path.join(BASE_DIR,'data','raw','pyxis.csv'))
+
+df_diagnosis.drop(columns=['icd_title'], inplace=True)
+
+print(df_diagnosis['seq_num'].unique())
+print("=========================================================================")
+
+df_icd9=pd.read_excel(os.path.join(BASE_DIR,'data','raw','valid_icd9_october2025.xlsx'))
+df_icd9.index = range(1, len(df_icd9) + 1)
+df_icd9.rename(columns={'CODE': 'ICD Code','LONG DESCRIPTION (VALID ICD-9 FY2026)':'Long Description'}, inplace=True)
+df_icd9.index.name = 'Code'
+
+df_icd9.drop(columns=['NF EXCL'], inplace=True)
+df_icd9['ICD Version']=9    
+
+df_icd10=pd.read_excel(os.path.join(BASE_DIR,'data','raw','valid_icd10_october2025.xlsx'))
+df_icd10.index = range(1, len(df_icd10) + 1)
+df_icd10.rename(columns={'CODE': 'ICD Code','LONG DESCRIPTION (VALID ICD-10 FY2026)':'Long Description','SHORT DESCRIPTION (VALID ICD-10 FY2026)':'Short Description'}, inplace=True)
+df_icd10.index.name = 'Code'
+
+df_icd10.drop(columns=['NF EXCL'], inplace=True)
+df_icd10['ICD Version']=10
+
+df_icd=pd.concat([df_icd9, df_icd10], ignore_index=True)
+
+print(df_icd.info())
+df_icd.index=range(1, len(df_icd) + 1)
+df_icd.index.name='Code'
+df_icd.to_csv(os.path.join(BASE_DIR,'data','processed','icd_mapping.csv'), index=True)
 
 
+df_icd=pd.read_csv(os.path.join(BASE_DIR,'data','processed','icd_mapping.csv'))
+print(df_icd.info())
 
+icd9_codes_in_diag = df_diagnosis[df_diagnosis['icd_version'] == 9]['icd_code'].unique()
+icd9_codes_in_mapping = df_icd['ICD-9 Code'].values
+
+missing_codes = [code for code in icd9_codes_in_diag if code not in icd9_codes_in_mapping]
+print("Missing ICD-9 codes:", missing_codes)
+print(f"{len(icd9_codes_in_diag) - len(missing_codes)} / {len(icd9_codes_in_diag)} codes match the ICD-9 mapping")
+
+map_icd9=dict(zip(df_icd['ICD-9 Code'], df_icd['Code']))
+
+
+df_diagnosis['icd_code'] = df_diagnosis['icd_code'].map(map_icd9)
+
+print("=========================================================================")
+
+print(df_diagnosis['icd_version'].unique())
+print("=========================================================================")
+
+print(df_diagnosis.info())
+print("=========================================================================")
+
+print(df_diagnosis.head())
+print("=========================================================================")
